@@ -1,0 +1,63 @@
+<html>
+    <head>  
+        <title> Gapiminder - Wealth and Health of Nations</title>
+         <style>
+            .nlist{
+                padding-left: 0;
+                
+            }
+            .hhtitle{
+                padding-left: 0pt;
+                background-color: black;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="hhtitle">
+            Gapiminder - Wealth and Health of Nations
+        </h1>
+        <h2>Countries</h2>
+        <div id="viz"></div>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>   
+        
+    <script>
+      var viz = d3.select("#viz");
+      var numbers = [1,2,5,8,6,7,9];
+        //var viz2 = document.getElementById("viz");
+        //viz2.innerHTML = "D3JS"
+        d3.json("gapminder.json",function(error, result){
+            numbers = result;
+            render();
+        })
+        
+        function render() {
+            var changes = viz.selectAll("div").data(numbers, function(d) {return d.name});
+           changes.enter()
+               .append("div")
+
+            .text(function(d) {return d.name})
+             
+              changes.exit().remove();
+            
+            changes.on("click", function(d, i) {
+                numbers.splice(i,1);
+                render();
+                })
+        }
+        
+        render();
+        
+        function addNumber() {
+            var newNumber = d3.select("#number").node().value;
+            numbers.push(newNumber);
+            render();
+            
+        }
+        
+        
+            
+            
+    </script>
+    </body>
+</html>
