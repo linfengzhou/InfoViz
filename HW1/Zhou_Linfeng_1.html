@@ -1,0 +1,42 @@
+<html>
+    <head>  
+        <title> Gapiminder - Wealth and Health of Nations</title>
+         <style>
+            .nlist{
+                padding-left: 0;
+                
+            }
+            .hhtitle{
+                padding-left: 0pt;
+                background-color: black;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="hhtitle">
+            Gapiminder - Wealth and Health of Nations
+        </h1>
+        <h1>Countries</h1>
+        <label>Name:</label>
+        <input type="text" id="textinput">
+        <button onclick="myfunction()">Add</button>
+        <hr>
+        <ul id="change" class="nlist">
+        <li>USA</li>
+        <li>Mexico</li>
+        <li>Canada</li>
+        </ul>
+        
+    <script>
+            function myfunction(){
+                var text;
+                var newEntry = document.createElement("li");
+                var log = document.getElementById("change")
+                text = document.getElementById("textinput").value;
+                newEntry.innerHTML = text; 
+                log.appendChild(newEntry);
+            }
+    </script>
+    </body>
+</html>
