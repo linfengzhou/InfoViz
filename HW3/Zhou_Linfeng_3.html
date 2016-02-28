@@ -3,14 +3,23 @@
     <head>
         <title>Linfeng_Zhou_3</title>
         <style>
-            h1{
-                background-color: black;
-                color: white
+            body{
+                margin: 0px;
+                font-family: fontin;
             }
+            
+            h1 {
+                background-color: black;
+                color: white;
+                margin: 0px;
+                padding: 5px;
+            }
+            
             #side{
                 background-color: white;
                 float: left;
-        }
+            }
+            
         </style>
     </head>
     <boby>
@@ -20,7 +29,7 @@
                     <div id="viz"></div>
         </div>
         <div id="section">
-        <svg width="600" height="600" >
+        <svg id='chart' width="600" height="600" >
         <g transform="translate(0,0)">
         <rect width="600" height="400" fill="none" ></rect>
         </g>
@@ -37,7 +46,7 @@
         var viz = d3.select("#viz");
         var country= [1,2,3,4,5];
         
-        d3.json("https://raw.githubusercontent.com/CristianFelix/infoviz/master/Week%203/newData.json",function(error,result){
+        d3.json("newData.json",function(error,result){
             country = result;
             countryFilter = country.filter(function(d) {return d.income[2008] != undefined});
             render(countryFilter);
@@ -45,12 +54,16 @@
         })
         
         var viz1= d3.select("#dotGroup")
-       
+        var chart = d3.select('#chart')
+        
+        
         var width = 600,
             height = 400,
             margin = {top: 20, left: 20, right: 20, bottom: 20},
             innerWidth = width - margin.left-margin.right,
             innerHeight = height - margin.top - margin.bottom;
+        
+        var yAxis 
         
         viz1.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         
@@ -58,8 +71,14 @@
                        .range([0,innerWidth]),
             yScale = d3.scale.linear()
                        .range([innerHeight,0]),
-            rScale = d3.scale.linear().range([4,20])
+            rScale = d3.scale.linear().range([5,20])
             colorScale = d3.scale.category10();
+        
+        var xAixs = d3.svg.axis()
+                .scale(xScale)
+                .orient('bottom')
+        var 
+        
         
         function render(data) {            
            var coun =  viz.selectAll("div").data(data, function(d) {return d.name});
