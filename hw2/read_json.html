@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Linfeng_Zhou_3</title>
+        <style>
+            h1{
+                background-color: black;
+                color: white
+            }
+            #side{
+                background-color: white;
+                float: left;
+        }
+        </style>
+    </head>
+    <boby>
+        <h1>Gapiminder - Weather and Health of Nations</h1>
+        <h2>Countries</h2>
+        <div id = "side">
+                    <div id="viz"></div>
+        </div>
+        <div id="section">
+        <svg width="600" height="600" >
+        <g transform="translate(0,0)">
+        <rect width="600" height="400" fill="none" ></rect>
+        </g>
+        <g id="dotGroup"></g>
+
+        </svg>
+        </div>
+
+    </boby>
+    
+    <script src="http://d3js.org/d3.v3.min.js" charset = "utf-8"></script>
+    
+    <script>
+        var viz = d3.select("#viz");
+        var country= [1,2,3,4,5];
+        
+        d3.json("newData.json",function(error,result){
+            country = result;
+            countryFilter = country.filter(function(d) {return d.income[2008] != undefined});
+            render(countryFilter);
+            render1(countryFilter);
+        })
+        
+        var viz1= d3.select("#dotGroup")
+       
+        var width = 600,
+            height = 400,
+            margin = {top: 20, left: 20, right: 20, bottom: 20},
+            innerWidth = width - margin.left-margin.right,
+            innerHeight = height - margin.top - margin.bottom;
+        
+        viz1.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        
+        var xScale = d3.scale.linear()
+                       .range([0,innerWidth]),
+            yScale = d3.scale.linear()
+                       .range([innerHeight,0]),
+            rScale = d3.scale.linear().range([4,20])
+            colorScale = d3.scale.category10();
+        
+        function render(data) {            
+           var coun =  viz.selectAll("div").data(data, function(d) {return d.name});
+            
+            xScale.domain(d3.extent(data, function(d) {return d.income[2008]}))
+            yScale.domain(d3.extent(data, function(d) {return d.lifeExpectancy[2008]}))
+            rScale.domain(d3.extent(data, function(d) {return d.population[2008]}))
+            
+               coun.enter()
+                   .append("div")
+                   .text(function(d) {return d.name})
+        }
+
+        
+        function render1(data){
+            var dataPoints = viz1.selectAll("circle").data(data);
+            dataPoints.enter()
+                .append("circle")
+                .attr("r", function(d) {return rScale(d.population[2008])})
+                .attr("cx", function(d) {return xScale(d.income[2008])})
+                .attr("cy", function(d) {return yScale(d.lifeExpectancy[2008])})
+                .attr("fill", function(d) {return colorScale(d.region)})
+                
+                .attr("opacity", 0.8) ;
+        }
+    </script>
+    
+</html>
+    
