@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Gapmider - Wealth and Health of Nations</title>
+        <style>
+            
+            body {
+                margin: 0px;
+                font-family: 'Arial'
+            }
+            
+            #title {
+                background-color: black;
+                color: white;
+                padding: 5px;
+            }
+            
+            h1 {
+                margin: 0
+            }
+
+            #side{
+                background-color: white;
+                float: left;
+            }
+            .domain {
+                fill: none;
+                stroke: #000;
+            }
+            .tick {
+                font-size: 12
+            }
+            .tick line{
+                stroke: #ccc
+            }
+        </style>
+    </head>
+    <boby>
+        <div id='title'>
+            <h1>Gapmider - Wealth and Health of Nations</h1>
+        </div>
+        <h2>Countries</h2>
+        <div id = "side">
+                    <div id="viz"></div>
+        </div>
+        <div id="section">
+        <svg id="chart" width="600" height="400" >
+        <g transform="translate(0,0)">
+        <rect width="500" height="400" fill="none" ></rect>
+        </g>
+            
+        <g id="dotGroup"></g>
+        <g id='xaxis'></g>
+        <g id='yaxis'></g>
+
+        </svg>
+        </div>
+
+    </boby>
+    
+    <script src="http://d3js.org/d3.v3.min.js" charset = "utf-8"></script>
+    
+    <script>
+        var viz = d3.select("#viz");
+        var country= [1,2,3,4,5];
+        
+        var width = 600,
+            height = 400,
+            margin = {top: 20, left: 30, right: 20, bottom: 20},
+            innerWidth = width - margin.left-margin.right,
+            innerHeight = height - margin.top - margin.bottom;
+        
+        var viz1 = d3.select("#dotGroup")
+        var viz2 = d3.select('#xaxis')
+        var viz3 = d3.select('#yaxis')
+        var xAxisGroup = viz2.attr("transform", "translate(" 
+                                  + margin.left
+                                  + "," 
+                                  + (innerHeight+ margin.top) + ")")
+        var yAxisGroup = viz3.attr("transform", "translate(" 
+                                  + margin.left
+                                 + "," 
+                                 + margin.top + ")")
+        
+        d3.json("https://raw.githubusercontent.com/CristianFelix/infoviz/master/Week%203/newData.json",function(error,result){
+            country = result;
+            countryFilter = country.filter(function(d) {return d.income[2008] != undefined});
+            render(countryFilter);
+            render1(countryFilter);
+            xAxisGroup.call(xAxis);
+            yAxisGroup.call(yAxis);
+            
+        })
+        
+        
+        viz1.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        
+        var xScale = d3.scale.linear()
+                       .range([0,innerWidth])
+            yScale = d3.scale.linear()
+                       .range([innerHeight,0]),
+            rScale = d3.scale.linear().range([5,20])
+            colorScale = d3.scale.category10();
+        
+        var xAxis = d3.svg.axis()
+                    .tickSize(-360)
+                    .scale(xScale)
+                    .orient("bottom")
+        
+        var yAxis = d3.svg.axis()
+                    .tickSize(-550)
+                    .scale(yScale)
+                    .orient("left")
+        
+        
+        function render(data) {            
+           var coun =  viz.selectAll("div").data(data, function(d) {return d.name});
+            
+            xScale.domain([-1000,d3.max(data, function(d) {return d.income[2008]})])
+            yScale.domain(d3.extent(data, function(d) {return d.lifeExpectancy[2008]}))
+            rScale.domain(d3.extent(data, function(d) {return d.population[2008]}))
+            
+               coun.enter()
+                   .append("div")
+                   .text(function(d) {return d.name})
+        }
+
+        
+        function render1(data){
+            var dataPoints = viz1.selectAll("circle").data(data);
+            dataPoints.enter()
+                .append("circle")
+                .attr("r", function(d) {return rScale(d.population[2008])})
+                .attr("cx", function(d) {return xScale(d.income[2008])})
+                .attr("cy", function(d) {return yScale(d.lifeExpectancy[2008])})
+                .attr("fill", function(d) {return colorScale(d.region)})
+                
+                .attr("opacity", 0.8) ;
+        }
+    </script>
+    
+</html>
+    
